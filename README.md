@@ -1,6 +1,6 @@
 # Uncertainty in Deep Learning 2024
 
-## Jensen-Shannon Divergence For Variational Inference In Continual Learning
+## Exploring the Jensen-Shannon Divergence for Variational Inference in Continual Learning
 
 This project aims to investigate how changing the Kullback-Leibler divergence 
 function to the Jensen-Shannon divergence impacts the performance of Variational
