@@ -25,7 +25,7 @@ def run_vcl_single_head(
     input_size: int,
     lr: float = 1e-03,
     weight_decay: float = 1e-05,
-    divergence: Literal["KL", "JS"] = "KL"
+    divergence: Literal["KL", "JS"] = "KL",
 ) -> List[float]:
 
     data_loaders = [
@@ -41,7 +41,10 @@ def run_vcl_single_head(
     ]
 
     model = VCLSingeHeadNN(
-        input_size=input_size, hidden_sizes=(256, 256), output_size=n_classes, divergence=divergence
+        input_size=input_size,
+        hidden_sizes=(256, 256),
+        output_size=n_classes,
+        divergence=divergence,
     )
 
     # Training
@@ -122,7 +125,7 @@ if __name__ == "__main__":
                     input_size,
                     lr=lr,
                     weight_decay=weight_decay,
-                    divergence=div
+                    divergence=div,
                 )
                 model2accs[model_name] = accs
 

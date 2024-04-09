@@ -222,11 +222,16 @@ class VCLMultiHeadNN(KLBase):
         # Shared layers
         self.layers.append(VariationalLinear(input_size, hidden_sizes[0], divergence))
         for i in range(len(hidden_sizes) - 1):
-            self.layers.append(VariationalLinear(hidden_sizes[i], hidden_sizes[i + 1], divergence))
+            self.layers.append(
+                VariationalLinear(hidden_sizes[i], hidden_sizes[i + 1], divergence)
+            )
 
         # Task-specific output layers
         self.task_specific_heads = nn.ModuleList(
-            [VariationalLinear(hidden_sizes[-1], output_size, divergence) for _ in range(n_tasks)]
+            [
+                VariationalLinear(hidden_sizes[-1], output_size, divergence)
+                for _ in range(n_tasks)
+            ]
         )
 
     def forward(self, x, task_id):

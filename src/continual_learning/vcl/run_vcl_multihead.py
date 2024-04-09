@@ -25,7 +25,7 @@ def run_vcl_multi_head(
     input_size: int,
     lr: float = 1e-03,
     weight_decay: float = 1e-05,
-    divergence: Literal["KL", "JS"] = "KL"
+    divergence: Literal["KL", "JS"] = "KL",
 ) -> List[float]:
 
     output_size = int(n_classes / len(tasks))
@@ -47,7 +47,7 @@ def run_vcl_multi_head(
         hidden_sizes=(256, 256),
         output_size=output_size,
         n_tasks=len(tasks),
-        divergence=divergence
+        divergence=divergence,
     )
 
     avg_test_accs = []
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                     input_size,
                     lr=lr,
                     weight_decay=weight_decay,
-                    divergence=div
+                    divergence=div,
                 )
                 model2accs[model_name] = accs
 
