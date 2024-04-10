@@ -90,7 +90,7 @@ if __name__ == "__main__":
     )
     model2accs[model_name] = accs
 
-    model_name = "VCL Singlehead"
+    model_name = "VCL KL Singlehead"
     print(f"\nTraining {model_name} model ...")
     accs = run_vcl_single_head(
         train_ds,
@@ -102,10 +102,11 @@ if __name__ == "__main__":
         input_size,
         lr=params[model_name]["lr"],
         weight_decay=params[model_name]["weight_decay"],
+        divergence="KL"
     )
     model2accs[model_name] = accs
 
-    model_name = "VCL Multihead"
+    model_name = "VCL KL Multihead"
     print(f"\nTraining {model_name} model ...")
     accs = run_vcl_multi_head(
         train_ds,
@@ -117,6 +118,39 @@ if __name__ == "__main__":
         input_size,
         lr=params[model_name]["lr"],
         weight_decay=params[model_name]["weight_decay"],
+        divergence="KL"
+    )
+    model2accs[model_name] = accs
+
+    model_name = "VCL JS Singlehead"
+    print(f"\nTraining {model_name} model ...")
+    accs = run_vcl_single_head(
+        train_ds,
+        val_ds,
+        test_ds,
+        tasks,
+        n_epochs,
+        n_classes,
+        input_size,
+        lr=params[model_name]["lr"],
+        weight_decay=params[model_name]["weight_decay"],
+        divergence="JS"
+    )
+    model2accs[model_name] = accs
+
+    model_name = "VCL JS Multihead"
+    print(f"\nTraining {model_name} model ...")
+    accs = run_vcl_multi_head(
+        train_ds,
+        val_ds,
+        test_ds,
+        tasks,
+        n_epochs,
+        n_classes,
+        input_size,
+        lr=params[model_name]["lr"],
+        weight_decay=params[model_name]["weight_decay"],
+        divergence="JS"
     )
     model2accs[model_name] = accs
 

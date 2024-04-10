@@ -8,11 +8,13 @@ PLOTS_DIR = Path(__file__).parent.parent.parent / "plots"
 
 def get_color(model_name: str) -> str:
     if "EWC" in model_name.upper():
-        return "#377eb8"
-    elif "VCL" in model_name.upper():
-        return "#ff7f00"
+        return "#000080"  # navy blue
+    elif "VCL KL" in model_name.upper():
+        return "#FF1493"  # pink
+    elif "VCL JS" in model_name.upper():
+        return "#FFD300"  # yellow
     else:
-        raise ValueError("Invalid model: Must be one of: EWC, VCL.")
+        raise ValueError("Invalid model: Must be one of: 'EWC', 'VCL KL', 'VCL JS'.")
 
 
 def get_linestyle(model_name: str) -> str:
@@ -50,7 +52,7 @@ def plot_test_accuracies(
         else:
             color = get_color(model_name)
             line_style = get_linestyle(model_name)
-            linewidth = n_models - i
+            linewidth = 1.5 + (n_models - i) * 0.6
             plt.plot(
                 tasks,
                 accuracies,

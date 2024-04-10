@@ -85,21 +85,20 @@ class VariationalLinear(nn.Module):
 
 class EvidenceLowerBoundLoss(nn.Module):
 
-    def __init__(self, model, beta=0.01):
+    def __init__(self, model):
         super().__init__()
         self.num_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-        self.beta = beta
 
     def forward(self, outputs, targets, kl):
         return (
             F.nll_loss(outputs, targets, reduction="mean")
-            + self.beta * kl / self.num_params
+            + 0.1 * kl / self.num_params
         )
 
 
-class KLBase(nn.Module):
+class VCLBase(nn.Module):
     def __init__(self):
-        super(KLBase, self).__init__()
+        super(VCLBase, self).__init__()
 
     def train_model(
         self,
@@ -124,10 +123,10 @@ class KLBase(nn.Module):
                 optimizer.zero_grad()
                 if task_id is not None:
                     output = F.log_softmax(self(data, task_id), dim=-1)
-                    kl = self.get_kl(task_id)
+                    kl = self.get_divergence(task_id)
                 else:
                     output = F.log_softmax(self(data), dim=-1)
-                    kl = self.get_kl()
+                    kl = self.get_divergence()
                 loss = loss_fn(output, target, kl)
                 loss.backward()
                 optimizer.step()
@@ -168,16 +167,16 @@ class KLBase(nn.Module):
             layer.prior_weights_mu = layer.weights_mu.data
             layer.prior_weights_sigma = layer.weights_sigma.data
 
-    def get_kl(self, task_id: Optional[int] = None):
-        kl_div = 0.0
+    def get_divergence(self, task_id: Optional[int] = None):
+        div = 0.0
         for layer in self.layers:
-            kl_div += layer.compute_divergence()
+            div += layer.compute_divergence()
         if task_id is not None:
-            kl_div += self.task_specific_heads[task_id].compute_divergence()
-        return kl_div
+            div += self.task_specific_heads[task_id].compute_divergence()
+        return div
 
 
-class VCLSingeHeadNN(KLBase):
+class VCLSingeHeadNN(VCLBase):
     def __init__(
         self,
         input_size: int,
@@ -206,7 +205,7 @@ class VCLSingeHeadNN(KLBase):
         return x
 
 
-class VCLMultiHeadNN(KLBase):
+class VCLMultiHeadNN(VCLBase):
     def __init__(
         self,
         input_size: int,
